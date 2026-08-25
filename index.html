@@ -738,39 +738,45 @@
     const sampleSelect = document.getElementById("sampleSelect");
     const sampleCounter = document.getElementById("sampleCounter");
 
-    function findNthOccurrence(text, keyword, occurrence = 1) {
+    function findNthQuotedOccurrence(text, keyword, occurrence = 1) {
       if (
         typeof text !== "string" ||
         typeof keyword !== "string" ||
         !keyword ||
+        !Number.isInteger(occurrence) ||
         occurrence < 1
       ) {
         return null;
       }
 
+      const openingQuote = "“";
+      const closingQuote = "”";
+      const quotedKeyword = `${openingQuote}${keyword}${closingQuote}`;
+
       let searchFrom = 0;
       let currentOccurrence = 0;
 
-      while (searchFrom <= text.length) {
-        const index = text.indexOf(keyword, searchFrom);
+      while (searchFrom < text.length) {
+        const quotedStart = text.indexOf(quotedKeyword, searchFrom);
 
-        if (index === -1) {
+        if (quotedStart === -1) {
           return null;
         }
 
         currentOccurrence += 1;
 
         if (currentOccurrence === occurrence) {
+          // +1 跳过左引号，只返回引号内部关键词的位置。
+          const keywordStart = quotedStart + openingQuote.length;
+
           return {
-            start: index,
-            end: index + keyword.length,
-            keyword: keyword
+            start: keywordStart,
+            end: keywordStart + keyword.length,
+            keyword
           };
         }
 
-        // 加 1 而不是加 keyword.length，
-        // 这样也能兼容可能发生重叠的字符串。
-        searchFrom = index + 1;
+        searchFrom = quotedStart + quotedKeyword.length;
       }
 
       return null;
@@ -1070,7 +1076,8 @@
 
         const instructionRanges = targets
           .map(target => {
-            const range = findNthOccurrence(
+            // Instruction 中只匹配被中文引号 “ ” 包裹的目标关键词。
+            const range = findNthQuotedOccurrence(
               instructionText,
               target.text,
               target.instruction_occurrence || 1
