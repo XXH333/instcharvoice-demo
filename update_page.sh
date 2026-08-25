@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+git remote set-url origin ssh://git@ssh.github.com:443/XXH333/instwordvoice-demo.git
 
 cd "$(dirname "$0")"
 
