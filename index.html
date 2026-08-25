@@ -738,6 +738,44 @@
     const sampleSelect = document.getElementById("sampleSelect");
     const sampleCounter = document.getElementById("sampleCounter");
 
+    function findNthOccurrence(text, keyword, occurrence = 1) {
+      if (
+        typeof text !== "string" ||
+        typeof keyword !== "string" ||
+        !keyword ||
+        occurrence < 1
+      ) {
+        return null;
+      }
+
+      let searchFrom = 0;
+      let currentOccurrence = 0;
+
+      while (searchFrom <= text.length) {
+        const index = text.indexOf(keyword, searchFrom);
+
+        if (index === -1) {
+          return null;
+        }
+
+        currentOccurrence += 1;
+
+        if (currentOccurrence === occurrence) {
+          return {
+            start: index,
+            end: index + keyword.length,
+            keyword: keyword
+          };
+        }
+
+        // 加 1 而不是加 keyword.length，
+        // 这样也能兼容可能发生重叠的字符串。
+        searchFrom = index + 1;
+      }
+
+      return null;
+    }
+
     function findNthQuotedOccurrence(text, keyword, occurrence = 1) {
       if (
         typeof text !== "string" ||
@@ -1050,14 +1088,16 @@
 
       // 左侧标题
       const instructionLabelText = document.createElement("span");
-      instructionLabelText.textContent = "Instruction · EN";
+      instructionLabelText.textContent = "Instruction · 中文";
 
-      // 右侧语言切换按钮
       const languageToggle = document.createElement("button");
       languageToggle.type = "button";
       languageToggle.className = "instruction-language-toggle";
-      languageToggle.textContent = "中文";
-      languageToggle.setAttribute("aria-label", "切换到中文指令");
+      languageToggle.textContent = "English";
+      languageToggle.setAttribute(
+        "aria-label",
+        "Switch to English instruction"
+      );
 
       // 重新构建面板标题
       instructionPanel.panelLabel.textContent = "";
@@ -1065,7 +1105,7 @@
       instructionPanel.panelLabel.appendChild(languageToggle);
 
       // 每个样本拥有独立的语言状态
-      let currentInstructionLanguage = "en";
+      let currentInstructionLanguage = "zh";
 
       function renderInstruction(language) {
         const isChinese = language === "zh";
@@ -1126,7 +1166,7 @@
         renderInstruction(currentInstructionLanguage);
       });
 
-      // 默认显示英文
+      // 默认显示中文
       renderInstruction(currentInstructionLanguage);
 
       if (targets.length) {
