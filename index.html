@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>InstructWordVoice — Audio Demo</title>
+  <title>InstCharVoice — Audio Demo</title>
 
   <style>
     :root {
@@ -335,9 +335,15 @@
 
     .metadata-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+      grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.4fr);
+      grid-template-rows: auto auto;
       gap: 16px;
       margin: 20px 0;
+    }
+
+    .metadata-grid .instruction-panel {
+      grid-column: 2;
+      grid-row: 1 / span 2;
     }
 
     .text-panel {
@@ -583,10 +589,6 @@
         top: 5px;
       }
 
-      .metadata-grid {
-        grid-template-columns: 1fr;
-      }
-
       .sample-summary,
       .sample-content {
         padding-left: 15px;
@@ -622,7 +624,7 @@
     <div class="conference">ICASSP AUDIO DEMO</div>
 
     <h1>
-      <span>InstructWordVoice</span>: Keyword-Aware
+      <span>InstCharVoice</span>: Keyword-Aware
       Character-Level Instruction TTS
     </h1>
 
@@ -632,15 +634,7 @@
 
     <p class="subtitle abstract">
       <strong>Abstract —</strong>
-      We present InstructWordVoice, a keyword-aware character-level instruction
-      text-to-speech framework for fine-grained and interpretable speech synthesis.
-      The proposed method grounds natural-language instructions into target Chinese
-      characters and explicit acoustic attributes, including pitch, energy,
-      duration, tone, and boundary. By performing character-level acoustic planning,
-      InstructWordVoice enables precise local prosody control while preserving
-      speaker identity and overall speech naturalness. The audio samples below
-      demonstrate its ability to follow detailed instructions and highlight its
-      advantages over existing baseline systems.
+      xxx
     </p>
 
     <div class="pipeline" aria-label="Method overview">
@@ -660,24 +654,24 @@
         <figure class="paper-figure">
           <img
             src="assert/mot.png"
-            alt="InstructWordVoice motivation and method illustration"
+            alt="motivation"
             loading="lazy"
             style="display: block; width: 50%; height: auto; margin: 0 auto;"
           >
           <figcaption>
-            Motivation and character-level acoustic control
+            Overview of InstCharVoice. Given natural-language instructions and input text, the framework grounds each local control request to its target characters and acoustic attributes, predicts an explicit five-dimensional character-level acoustic plan, and conditions speech generation on the predicted plan.
           </figcaption>
         </figure>
 
         <figure class="paper-figure">
           <img
             src="assert/wordvoice.png"
-            alt="InstructWordVoice LLM-based framework illustration"
+            alt="llm"
             loading="lazy"
             style="display: block; width: 60%; height: auto; margin: 0 auto;"
           >
           <figcaption>
-            LLM-based instruction grounding framework
+            Model architecture of InstCharVoice, including (a) character-level sequence construction, (b) autoregressive prediction of grounding labels, acoustic attributes, and speech tokens, and (c) the grounding-aware training objective.
           </figcaption>
         </figure>
       </section>
@@ -715,7 +709,7 @@
         {"key":"cosyvoice3","name":"CosyVoice3","folder":"cosyvoice3","tag":"Baseline","description":"对比模型"},
         {"key":"firered","name":"FireRedTTS","folder":"firered","tag":"Baseline","description":"对比模型"},
         {"key":"qwen3","name":"Qwen3-TTS","folder":"qwen3","tag":"Baseline","description":"对比模型"},
-        {"key":"instwordvoice","name":"InstructWordVoice","folder":"instwordvoice","tag":"Ours","description":"关键词感知的字级指令语音合成"}],
+        {"key":"instwordvoice","name":"InstCharVoice","folder":"instwordvoice","tag":"Ours","description":"关键词感知的字级指令语音合成"}],
       "samples":[
         {"id":0,"instruct":"语速平稳，音调渐趋低沉，在“我”字处能量突增，语气由缓转急，表达出信息传递的紧迫感。","en_instruct":"Maintain a steady speaking rate with a gradually lowering pitch. Sharply increase the energy on “我”, then shift from an unhurried to an urgent delivery to convey the urgency of delivering the information.","text":"技术测试中心的谷主任和毛主任亲自带队，刚刚做完勘察，我赶紧答道。","ref_text":"你这个周末回来有点早。","targets":[{"text":"我","text_occurrence":1,"instruction_occurrence":1,"attributes":["Energy"]}],"audio":{"ref":{"src":"_demo_mp3/ref/0.mp3","exists":true},"cosyvoice3":{"src":"_demo_mp3/cosyvoice3/0.mp3","exists":true},"firered":{"src":"_demo_mp3/firered/0.mp3","exists":true},"qwen3":{"src":"_demo_mp3/qwen3/0.mp3","exists":true},"instwordvoice":{"src":"_demo_mp3/instwordvoice/0.mp3","exists":true}}},
         {"id":1,"instruct":"语速有明显停顿与节奏变化，在“说”字处能量骤升，音高上扬，随后在“带”字处音高骤降，语气转为低沉，整体节奏松紧交替，句尾收束干脆。","en_instruct":"Use noticeable pauses and rhythmic variations. Sharply increase the energy and raise the pitch on “说”, then abruptly lower the pitch on “带” and shift to a deeper tone. Alternate between tighter and more relaxed pacing throughout, and end the sentence with a crisp closure.","text":"要吃什么的时候，我都会对他们说没有人，必须要带你去玩。","ref_text":"当然呢有的朋友呢也是在不断的成长。","targets":[{"text":"说","text_occurrence":1,"instruction_occurrence":1,"attributes":["Energy","Pitch"]},{"text":"带","text_occurrence":1,"instruction_occurrence":1,"attributes":["Pitch"]}],"audio":{"ref":{"src":"_demo_mp3/ref/1.mp3","exists":true},"cosyvoice3":{"src":"_demo_mp3/cosyvoice3/1.mp3","exists":true},"firered":{"src":"_demo_mp3/firered/1.mp3","exists":true},"qwen3":{"src":"_demo_mp3/qwen3/1.mp3","exists":true},"instwordvoice":{"src":"_demo_mp3/instwordvoice/1.mp3","exists":true}}},
@@ -1218,28 +1212,29 @@
         textRanges
       );
 
-      const refWrapper = document.createElement("div");
-      refWrapper.className = "reference-text";
+      const referencePanel = document.createElement("div");
+      referencePanel.className = "text-panel reference-panel";
 
-      const refLabel = document.createElement("div");
-      refLabel.className = "panel-label";
-      refLabel.textContent = "Reference Text";
+      const referenceLabel = document.createElement("div");
+      referenceLabel.className = "panel-label";
+      referenceLabel.textContent = "Reference Text";
 
-      const refText = document.createElement("p");
-      refText.className = "panel-text";
-      refText.textContent = sample.ref_text || "—";
+      const referenceText = document.createElement("p");
+      referenceText.className = "panel-text";
+      referenceText.textContent = sample.ref_text || "—";
 
-      const refNote = document.createElement("p");
-      refNote.className = "reference-note";
-      refNote.textContent = "Reference audio is used as the zero-shot speaker prompt.";
+      const referenceNote = document.createElement("p");
+      referenceNote.className = "reference-note";
+      referenceNote.textContent =
+        "Reference audio is used as the zero-shot speaker prompt.";
 
-      refWrapper.appendChild(refLabel);
-      refWrapper.appendChild(refText);
-      refWrapper.appendChild(refNote);
-      targetPanel.panel.appendChild(refWrapper);
+      referencePanel.appendChild(referenceLabel);
+      referencePanel.appendChild(referenceText);
+      referencePanel.appendChild(referenceNote);
 
-      metadata.appendChild(instructionPanel.panel);
+      metadata.appendChild(referencePanel);
       metadata.appendChild(targetPanel.panel);
+      metadata.appendChild(instructionPanel.panel);
       content.appendChild(metadata);
 
       const audioTitle = document.createElement("div");

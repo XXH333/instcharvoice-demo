@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# python -m http.server 8004
 set -e
 git remote set-url origin ssh://git@ssh.github.com:443/XXH333/instwordvoice-demo.git
 
