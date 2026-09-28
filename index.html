@@ -624,17 +624,16 @@
     <div class="conference">ICASSP AUDIO DEMO</div>
 
     <h1>
-      <span>InstCharVoice</span>: Keyword-Aware
-      Character-Level Instruction TTS
+      <span>InstCharVoice</span>: Grounding Natural-Language Instructions for Character-Level Control in Text-to-Speech
     </h1>
 
     <p class="anonymous-note">
-      Anonymous submission
+      Submission to ICASSP2027
     </p>
 
     <p class="subtitle abstract">
       <strong>Abstract —</strong>
-      xxx
+      Instruction-based text-to-speech (ITTS) systems enable natural-language control of expressive speech generation, but often offer limited transparency and fine-grained control over individual text units. Character-level controllable TTS systems provide explicit acoustic control, yet typically rely on user-specified acoustic attributes. To bridge this gap, we propose InstCharVoice, a unified framework that grounds natural-language instructions in character-level acoustic control. We first construct grounded instruction annotations on the WordVoice-5A-zh corpus using Qwen3-Omni. With this supervision, we train an autoregressive model to identify instruction-relevant characters and predict their acoustic attributes before generating the corresponding speech tokens. Keyword prediction and grounding-aware loss weighting help the model focus on instruction-relevant characters and attributes. Experiments show improved instruction following and keyword-level acoustic control over representative ITTS systems, with competitive speech naturalness and explicit character-level controllability.
     </p>
 
     <div class="pipeline" aria-label="Method overview">
@@ -659,7 +658,7 @@
             style="display: block; width: 50%; height: auto; margin: 0 auto;"
           >
           <figcaption>
-            Overview of InstCharVoice. Given natural-language instructions and input text, the framework grounds each local control request to its target characters and acoustic attributes, predicts an explicit five-dimensional character-level acoustic plan, and conditions speech generation on the predicted plan.
+            Motivation and overview of InstCharVoice. The framework bridges natural-language instructions and explicit character-level acoustic control through instruction grounding and acoustic planning.
           </figcaption>
         </figure>
 
@@ -671,7 +670,7 @@
             style="display: block; width: 60%; height: auto; margin: 0 auto;"
           >
           <figcaption>
-            Model architecture of InstCharVoice, including (a) character-level sequence construction, (b) autoregressive prediction of grounding labels, acoustic attributes, and speech tokens, and (c) the grounding-aware training objective.
+            Model architecture of InstCharVoice, including (a) training sequence construction, (b) autoregressive modeling of character-level speech chunks, and (c) grounding-aware training objective.
           </figcaption>
         </figure>
       </section>
